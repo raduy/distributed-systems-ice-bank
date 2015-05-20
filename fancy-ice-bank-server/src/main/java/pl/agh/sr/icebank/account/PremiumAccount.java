@@ -49,4 +49,11 @@ public class PremiumAccount extends _PremiumAccountDisp implements Bank.PremiumA
     public int hashCode() {
         return baseAccount != null ? baseAccount.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "PremiumAccount{" +
+                "baseAccount=" + baseAccount +
+                '}';
+    }
 }

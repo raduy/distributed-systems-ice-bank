@@ -49,4 +49,12 @@ public class SilverAccount extends _AccountDisp implements Account {
         result = 31 * result + (accountNumber != null ? accountNumber.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "SilverAccount{" +
+                "balance=" + balance +
+                ", accountNumber=" + accountNumber +
+                '}';
+    }
 }

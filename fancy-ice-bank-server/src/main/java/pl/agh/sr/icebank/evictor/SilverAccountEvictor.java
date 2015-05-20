@@ -35,7 +35,7 @@ public class SilverAccountEvictor extends EvictorBase implements Ice.ServantLoca
 
     @Override
     public void evict(Object servant, java.lang.Object cookie) {
-        LOG.debug("Moving account of id: {} out of cache", cookie);
+        LOG.debug("Evicting account of id: {} out of cache", cookie);
         accountRepository.save((Account) servant);
     }
 }

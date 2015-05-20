@@ -2,10 +2,12 @@ package pl.agh.sr.icebank.account;
 
 import Bank.Currency;
 
+import java.io.Serializable;
+
 /**
  * @author Lukasz Raduj <raduj.lukasz@gmail.com>
  */
-public class Money {
+public class Money implements Serializable {
     private final int amount;
     private final Currency currency;
 
