@@ -1,5 +1,7 @@
 #Proxies...
 BankManager.Proxy=main/bankManager:tcp -h 192.168.0.5 -p 10001
+SilverAccounts.Proxy=silverAccounts/:tcp -h 192.168.0.5 -p 10001
+PremiumAccounts.Proxy=premiumAccounts/:tcp -h 192.168.0.5 -p 10001
 
 #
 # Warn about connection exceptions.

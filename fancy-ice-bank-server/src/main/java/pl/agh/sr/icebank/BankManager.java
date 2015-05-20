@@ -30,7 +30,7 @@ public class BankManager extends _BankManagerDisp implements Bank.BankManager {
 
     @Override
     public void createAccount(PersonalData personalData, accountType type, StringHolder accountID, Current current) throws IncorrectData, RequestRejected {
-        LOG.debug("Creating new account for {}", personalData);
+        LOG.debug("Creating new account for {}", IceBankStrings.toString(personalData));
         validatePersonalData(personalData);
 
         switch (type) {
@@ -44,7 +44,6 @@ public class BankManager extends _BankManagerDisp implements Bank.BankManager {
                 saveToInMemoryCache(silverAccount);
                 accountID.value = silverAccount.getAccountNumber();
         }
-
     }
 
     private void validatePersonalData(PersonalData personalData) throws IncorrectData {
