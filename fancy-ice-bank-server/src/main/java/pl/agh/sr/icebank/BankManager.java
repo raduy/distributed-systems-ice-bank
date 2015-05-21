@@ -80,6 +80,7 @@ public class BankManager extends _BankManagerDisp implements Bank.BankManager {
 
     @Override
     public void removeAccount(String accountID, Current current) throws IncorrectData, NoSuchAccount {
-
+        LOG.info("Removing account with id: {}", accountID);
+        accountRepository.removeById(accountID);
     }
 }

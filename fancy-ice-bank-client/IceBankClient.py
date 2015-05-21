@@ -18,6 +18,16 @@ class ExitCommand(object):
         sys.exit(0)
 
 
+class RemoveAccountCommand(object):
+    def __init__(self, bank_manager):
+        self.bank_manager = bank_manager
+        super(RemoveAccountCommand, self).__init__()
+
+    def execute(self):
+        account_id = raw_input("What account you want to remove? ")
+        self.bank_manager.removeAccount(account_id)
+
+
 class CommandRouter(object):
     def __init__(self, bank_manager):
         self.bank_manager = bank_manager
@@ -25,7 +35,8 @@ class CommandRouter(object):
 
         self.commands = {"-c": CreateNewAccountCommand(self.bank_manager),
                          "-e": ExitCommand(),
-                         "-m": ManageAccountCommand(communicator)}
+                         "-m": ManageAccountCommand(communicator),
+                         "-r": RemoveAccountCommand(self.bank_manager)}
 
     def parse_command(self):
         cmd = raw_input()
@@ -40,6 +51,7 @@ class CommandRouter(object):
 def print_menu():
     print ("IceBank menu:\n"
            "-c Create new account\n"
+           "-r Remove account\n"
            "-m Manage your account (e.g. check balance)\n"
            "-e Exit client\n"),
 
