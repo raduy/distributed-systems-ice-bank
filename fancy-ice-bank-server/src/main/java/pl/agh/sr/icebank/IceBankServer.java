@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 import pl.agh.sr.icebank.evictor.SilverAccountEvictor;
+import pl.agh.sr.icebank.financialservice.FinancialNewsListener;
 
 /**
  * @author Lukasz Raduj <raduj.lukasz@gmail.com>
@@ -17,11 +18,13 @@ public class IceBankServer {
 
     private final BankManager bankManager;
     private final SilverAccountEvictor accountEvictor;
+    private final FinancialNewsListener listener;
 
     @Autowired
-    public IceBankServer(BankManager bankManager, SilverAccountEvictor accountEvictor) {
+    public IceBankServer(BankManager bankManager, SilverAccountEvictor accountEvictor, FinancialNewsListener listener) {
         this.bankManager = bankManager;
         this.accountEvictor = accountEvictor;
+        this.listener = listener;
     }
 
     public void play(String[] args) {
@@ -33,7 +36,7 @@ public class IceBankServer {
         Identity bankMangerIdentity = communicator.stringToIdentity("main/bankManager");
         adapter.add(bankManager, bankMangerIdentity);
 
-
+        listener.listen(communicator, adapter);
         adapter.activate();
 
         LOG.info("Ice Bank Server up!");
