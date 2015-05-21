@@ -1,4 +1,4 @@
-package pl.agh.sr.icebank;
+package pl.agh.sr.icebank.api;
 
 import Bank.*;
 import Ice.Current;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import pl.agh.sr.icebank.account.PremiumAccount;
 import pl.agh.sr.icebank.account.SilverAccount;
 import pl.agh.sr.icebank.repository.AccountRepository;
+import pl.agh.sr.icebank.util.IceBankStrings;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 

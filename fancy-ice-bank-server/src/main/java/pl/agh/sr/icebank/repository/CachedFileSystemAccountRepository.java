@@ -34,7 +34,6 @@ public class CachedFileSystemAccountRepository implements AccountRepository {
                 .build(accountLoader);
     }
 
-
     @Override
     public void save(Account account) {
         LOG.debug("Saving account {}", account);

@@ -1,4 +1,4 @@
-package pl.agh.sr.icebank;
+package pl.agh.sr.icebank.util;
 
 import Bank.PersonalData;
 

@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
+import pl.agh.sr.icebank.api.BankManager;
+import pl.agh.sr.icebank.config.SpringConfig;
 import pl.agh.sr.icebank.evictor.SilverAccountEvictor;
 import pl.agh.sr.icebank.financialservice.FinancialNewsListener;
 
@@ -45,7 +47,7 @@ public class IceBankServer {
 
 
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext(Config.class);
+        AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext(SpringConfig.class);
         IceBankServer bankServer = appContext.getBean(IceBankServer.class);
         bankServer.play(args);
     }
