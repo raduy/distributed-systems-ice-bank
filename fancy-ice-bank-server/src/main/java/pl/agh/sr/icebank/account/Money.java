@@ -27,4 +27,24 @@ public class Money implements Serializable {
     public Currency currency() {
         return currency;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Money money = (Money) o;
+
+        if (amount != money.amount) return false;
+        if (currency != money.currency) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = amount;
+        result = 31 * result + (currency != null ? currency.hashCode() : 0);
+        return result;
+    }
 }

@@ -11,4 +11,6 @@ public interface AccountRepository {
     Account loadById(String accountId);
 
     void removeById(String accountId);
+
+    void flush();
 }

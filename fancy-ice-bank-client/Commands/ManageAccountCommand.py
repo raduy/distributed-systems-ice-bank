@@ -107,7 +107,7 @@ class ManageAccountCommand(object):
                 print "%sMoney transferred" % cmd_context
             elif cmd.startswith("-l"):
                 interest_rate, total_cost = self.calculate_loan(account)
-                print "Ice Bank offered You: interest rate of: %.3f and total cost of: %d" % (interest_rate, total_cost)
+                print "Ice Bank offered You: interest rate of: %.2f %% and total cost of: %d" % (interest_rate * 100, total_cost)
             elif cmd.startswith("-e"):
                 break
             else:

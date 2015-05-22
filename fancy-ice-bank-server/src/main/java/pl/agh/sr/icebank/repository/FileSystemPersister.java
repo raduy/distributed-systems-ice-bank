@@ -48,11 +48,11 @@ public class FileSystemPersister {
         try {
             bytes = Files.readAllBytes(buildPath(accountId));
         } catch (IOException e) {
-            LOG.error(format("Cannot read account of id: %s to file", accountId), e);
+            LOG.info("No account of id: %s in files", accountId);
         }
         SilverAccount silverAccount = (SilverAccount) SerializationUtils.deserialize(bytes);
         silverAccount.setTransferManager(appContext.getBean(TransferManager.class));
-        return silverAccount; //TODO handle serialization exception
+        return silverAccount;
     }
 
     public void removeById(String accountId) {
@@ -69,6 +69,6 @@ public class FileSystemPersister {
     }
 
     private Path buildPath(String accountId) {
-        return Paths.get(System.getProperty("user.home"), "silver-accounts", accountId);
+        return Paths.get("data", "silver-accounts", accountId);
     }
 }
