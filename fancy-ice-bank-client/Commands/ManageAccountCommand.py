@@ -24,7 +24,7 @@ class ManageAccountCommand(object):
     def transfer_money(self, account):
         destination_account = raw_input("Destination Account number: ")
         amount = int(raw_input("How much?: "))
-    
+
         try:
             account.transferMoney(destination_account, amount)
             print "Money (%d) transferred to %s" % (amount, destination_account)
@@ -32,6 +32,31 @@ class ManageAccountCommand(object):
             print "Incorrect account number"
         except Bank.IncorrectAmount:
             print "Incorrect amount"
+
+    def calculate_loan(self, account):
+        def parse_currency():
+            while True:
+                currencies = {
+                    'PLN': Bank.Currency.PLN,
+                    'EUR': Bank.Currency.EUR,
+                    'USD': Bank.Currency.USD,
+                    'CHF': Bank.Currency.CHF
+                }
+
+                currency_cmd = raw_input("In what currency (PLN, EUR, USD, CHF) you are interested in? ")
+                if currency_cmd in currencies:
+                    return currencies[currency_cmd]
+
+                print "Incorrect currency"
+
+        try:
+            amount = int(raw_input("How much do you want to borrow? "))
+            currency = parse_currency()
+            period = int(raw_input("What period do you want? "))
+            return account.calculateLoan(amount, currency, period)
+
+        except Bank.IncorrectData:
+            print "Incorrect Data :( Try again"
 
     def parse_account_number(self, account_type):
         account_number = raw_input("Give me you account number:")
@@ -60,13 +85,14 @@ class ManageAccountCommand(object):
 
         cmd_context = "(IceBank on %s %s... account)>" % (
             account_type_map[account_type], str(account.getAccountNumber())[:5])
-        
+
         print (cmd_context),
         while True:
             print ("What would you like to do with your account?")
             print ("-b - get balance\n"
                    "-n - get account number\n"
                    "-t - transfer money\n"
+                   "-l - calculate loan\n"
                    "-e - exit\n"),
             cmd = raw_input(cmd_context)
 
@@ -78,7 +104,10 @@ class ManageAccountCommand(object):
                 print "%sAccount number: %s" % (cmd_context, account_number)
             elif cmd.startswith("-t"):
                 self.transfer_money(account)
-                print "%sMoney transfered" % cmd_context
+                print "%sMoney transferred" % cmd_context
+            elif cmd.startswith("-l"):
+                interest_rate, total_cost = self.calculate_loan(account)
+                print "Ice Bank offered You: interest rate of: %.3f and total cost of: %d" % (interest_rate, total_cost)
             elif cmd.startswith("-e"):
                 break
             else:

@@ -2,6 +2,7 @@ package pl.agh.sr.icebank.account;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.agh.sr.icebank.loan.LoanService;
 import pl.agh.sr.icebank.transfer.TransferManager;
 
 /**
@@ -11,10 +12,12 @@ import pl.agh.sr.icebank.transfer.TransferManager;
 public class AccountFactory {
 
     private final TransferManager transferManager;
+    private final LoanService loanService;
 
     @Autowired
-    public AccountFactory(TransferManager transferManager) {
+    public AccountFactory(TransferManager transferManager, LoanService loanService) {
         this.transferManager = transferManager;
+        this.loanService = loanService;
     }
 
     public SilverAccount newSilverAccount() {
@@ -22,6 +25,6 @@ public class AccountFactory {
     }
 
     public PremiumAccount newPremiumAccount() {
-        return new PremiumAccount(transferManager);
+        return new PremiumAccount(transferManager, loanService);
     }
 }

@@ -18,27 +18,24 @@ public class CurrenciesTable {
     private final ConcurrentMap<Key, Float> table = new ConcurrentHashMap<>();
 
     public float findMapping(Currency first, Currency second) {
-        FinancialNews.Currency firstTransformed = FinancialNews.Currency.valueOf(first.value());
-        FinancialNews.Currency secondTransformed = FinancialNews.Currency.valueOf(second.value());
-
-        return table.getOrDefault(new Key(firstTransformed, secondTransformed), DEFAULT_CONVERSION_FACTOR);
+        return table.getOrDefault(new Key(first, second), DEFAULT_CONVERSION_FACTOR);
     }
 
-    public void update(FinancialNews.Currency firstCurrency, FinancialNews.Currency secondCurrency, float rate) {
+    public void update(Currency firstCurrency, Currency secondCurrency, float rate) {
         table.put(new Key(firstCurrency, secondCurrency), rate);
         LOG.trace("Table updated for rating {} --> {}", firstCurrency, secondCurrency);
     }
 
     public class Key {
-        private final FinancialNews.Currency from;
-        private final FinancialNews.Currency to;
+        private final Currency from;
+        private final Currency to;
 
-        public Key(FinancialNews.Currency from, FinancialNews.Currency to) {
+        public Key(Currency from, Currency to) {
             this.from = from;
             this.to = to;
         }
 
-        public Key of(FinancialNews.Currency from, FinancialNews.Currency to) {
+        public Key of(Currency from, Currency to) {
             return new Key(from, to);
         }
 
