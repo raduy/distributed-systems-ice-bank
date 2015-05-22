@@ -4,8 +4,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import pl.agh.sr.icebank.account.SilverAccount;
+import pl.agh.sr.icebank.transfer.TransferManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,12 +16,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static java.lang.String.format;
+
 /**
  * @author Lukasz Raduj <raduj.lukasz@gmail.com>
  */
 @Component
 public class FileSystemPersister {
     private static final Logger LOG = LoggerFactory.getLogger(FileSystemPersister.class);
+
+    @Autowired
+    private ApplicationContext appContext;
 
     public void persist(SilverAccount account) {
         LOG.debug("Persisting account {}", account);
@@ -30,7 +38,7 @@ public class FileSystemPersister {
         try {
             FileUtils.writeByteArrayToFile(file, serialized);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(format("Cannot persist account %s to file", account), e);
         }
     }
 
@@ -40,9 +48,11 @@ public class FileSystemPersister {
         try {
             bytes = Files.readAllBytes(buildPath(accountId));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(format("Cannot read account of id: %s to file", accountId), e);
         }
-        return (SilverAccount) SerializationUtils.deserialize(bytes);
+        SilverAccount silverAccount = (SilverAccount) SerializationUtils.deserialize(bytes);
+        silverAccount.setTransferManager(appContext.getBean(TransferManager.class));
+        return silverAccount; //TODO handle serialization exception
     }
 
     public void removeById(String accountId) {
@@ -50,7 +60,7 @@ public class FileSystemPersister {
         try {
             Files.delete(buildPath(accountId));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(format("Cannot remove account of id: %s from file", accountId), e);
         }
     }
 
@@ -60,14 +70,5 @@ public class FileSystemPersister {
 
     private Path buildPath(String accountId) {
         return Paths.get(System.getProperty("user.home"), "silver-accounts", accountId);
-    }
-
-    public static void main(String[] args) {
-        FileSystemPersister fileSystemPersister = new FileSystemPersister();
-        SilverAccount silverAccount = new SilverAccount();
-        fileSystemPersister.persist(silverAccount);
-
-        SilverAccount read = fileSystemPersister.read(silverAccount.getAccountNumber());
-        System.out.println(read);
     }
 }

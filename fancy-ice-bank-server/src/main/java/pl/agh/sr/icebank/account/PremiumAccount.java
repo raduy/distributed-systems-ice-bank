@@ -4,12 +4,21 @@ import Bank.*;
 import Ice.Current;
 import Ice.FloatHolder;
 import Ice.IntHolder;
+import pl.agh.sr.icebank.transfer.TransferManager;
 
 /**
  * @author Lukasz Raduj <raduj.lukasz@gmail.com>
  */
-public class PremiumAccount extends _PremiumAccountDisp implements Bank.PremiumAccount {
-    private final Account baseAccount = new SilverAccount();
+public class PremiumAccount extends _PremiumAccountDisp implements Bank.PremiumAccount, TransferableAccount {
+    private final SilverAccount baseAccount;
+
+    /**
+     * Package scope constructor. Only available for AccountRepository
+     * @param transferManager required to do money transfers.
+     */
+    PremiumAccount(TransferManager transferManager) {
+        this.baseAccount = new SilverAccount(transferManager);
+    }
 
     @Override
     public void calculateLoan(int amount, Currency curr, int period, FloatHolder interestRate,
@@ -17,6 +26,7 @@ public class PremiumAccount extends _PremiumAccountDisp implements Bank.PremiumA
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
+    /*Methods delegation start*/
     @Override
     public int getBalance(Current current) {
         return baseAccount.getBalance(current);
@@ -26,12 +36,22 @@ public class PremiumAccount extends _PremiumAccountDisp implements Bank.PremiumA
     public String getAccountNumber(Current current) {
         return baseAccount.getAccountNumber(current);
     }
-
     @Override
     public void transferMoney(String accountNumber, int amount, Current current)
             throws IncorrectAccountNumber, IncorrectAmount {
         baseAccount.transferMoney(accountNumber, amount, current);
     }
+
+    @Override
+    public void updateBalance(Money newBalance) {
+        this.baseAccount.updateBalance(newBalance);
+    }
+
+    @Override
+    public void setTransferManager(TransferManager manager) {
+        this.baseAccount.setTransferManager(manager);
+    }
+    /*Methods delegation end*/
 
     @Override
     public boolean equals(Object o) {
@@ -40,14 +60,12 @@ public class PremiumAccount extends _PremiumAccountDisp implements Bank.PremiumA
 
         PremiumAccount that = (PremiumAccount) o;
 
-        if (baseAccount != null ? !baseAccount.equals(that.baseAccount) : that.baseAccount != null) return false;
-
-        return true;
+        return baseAccount.equals(that.baseAccount);
     }
 
     @Override
     public int hashCode() {
-        return baseAccount != null ? baseAccount.hashCode() : 0;
+        return baseAccount.hashCode();
     }
 
     @Override

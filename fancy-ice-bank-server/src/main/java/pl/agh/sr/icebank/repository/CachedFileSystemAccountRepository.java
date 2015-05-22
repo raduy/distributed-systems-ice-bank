@@ -13,6 +13,7 @@ import pl.agh.sr.icebank.account.SilverAccount;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Lukasz Raduj <raduj.lukasz@gmail.com>
@@ -30,6 +31,7 @@ public class CachedFileSystemAccountRepository implements AccountRepository {
     public CachedFileSystemAccountRepository(FileSystemPersister fileSystemPersister, AccountLoader accountLoader) {
         this.fileSystemPersister = fileSystemPersister;
         this.loadingCache = CacheBuilder.newBuilder()
+                .expireAfterAccess(100, TimeUnit.MINUTES)
                 .maximumSize(CACHE_SIZE)
                 .build(accountLoader);
     }

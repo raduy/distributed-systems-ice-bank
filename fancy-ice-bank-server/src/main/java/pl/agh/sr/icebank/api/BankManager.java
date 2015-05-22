@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.agh.sr.icebank.account.AccountFactory;
 import pl.agh.sr.icebank.account.PremiumAccount;
 import pl.agh.sr.icebank.account.SilverAccount;
 import pl.agh.sr.icebank.repository.AccountRepository;
@@ -23,10 +24,12 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class BankManager extends _BankManagerDisp implements Bank.BankManager {
     private static final Logger LOG = LoggerFactory.getLogger(BankManager.class);
     private final AccountRepository accountRepository;
+    private final AccountFactory accountFactory;
 
     @Autowired
-    public BankManager(AccountRepository accountRepository) {
+    public BankManager(AccountRepository accountRepository, AccountFactory accountFactory) {
         this.accountRepository = accountRepository;
+        this.accountFactory = accountFactory;
     }
 
     @Override
@@ -36,12 +39,12 @@ public class BankManager extends _BankManagerDisp implements Bank.BankManager {
 
         switch (type) {
             case PREMIUM:
-                PremiumAccount premiumAccount = new PremiumAccount();
+                PremiumAccount premiumAccount = accountFactory.newPremiumAccount();
                 saveToAsmTable(current.adapter, premiumAccount);
                 accountID.value = premiumAccount.getAccountNumber();
                 break;
             case SILVER:
-                SilverAccount silverAccount = new SilverAccount();
+                SilverAccount silverAccount = accountFactory.newSilverAccount();
                 saveToInMemoryCache(silverAccount);
                 accountID.value = silverAccount.getAccountNumber();
         }
