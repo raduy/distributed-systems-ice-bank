@@ -42,11 +42,12 @@ public class BankManager extends _BankManagerDisp implements Bank.BankManager {
                 PremiumAccount premiumAccount = accountFactory.newPremiumAccount();
                 saveToAsmTable(current.adapter, premiumAccount);
                 accountID.value = premiumAccount.getAccountNumber();
+                accountRepository.save(premiumAccount);
                 break;
             case SILVER:
                 SilverAccount silverAccount = accountFactory.newSilverAccount();
-                saveToInMemoryCache(silverAccount);
                 accountID.value = silverAccount.getAccountNumber();
+                accountRepository.save(silverAccount);
         }
     }
 
@@ -54,10 +55,6 @@ public class BankManager extends _BankManagerDisp implements Bank.BankManager {
         if (!isPersonalDataValid(personalData)) {
             throw new IncorrectData("Personal Data incorrect");
         }
-    }
-
-    private void saveToInMemoryCache(SilverAccount account) {
-        accountRepository.save(account);
     }
 
     private void saveToAsmTable(ObjectAdapter adapter, PremiumAccount account) {
